@@ -3,9 +3,9 @@ import userFetcher from '../apis/api-user';
 
 export default function useUser() {
 	const {data, mutate, error} = useSWR('user', userFetcher);
-	// console.log(error.status)
+	console.log(data, error);
 	const loading = !data && !error;
-	// console.log(error, error.response)
+	// console.log(2,error, error.response)
 	const loggedOut = error && error.response.status === 401;
 	console.log({
 		loading,

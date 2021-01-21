@@ -34,11 +34,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 function LoginPage() {
 	const classes:Record<any, any> = useStyles();
   const { register, handleSubmit, watch, errors } = useForm();
-  const user = useUser();
+  const {
+    loading,
+    loggedOut,
+    user: data,
+    mutate
+  } = useUser();
   const onSubmit = data => {
     AuthService.login(data.email, data.password)
       .then((response) => {
-        console.log('do something');
+        mutate();
       });
   }
 
