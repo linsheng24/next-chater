@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const API_URL = "http://127.0.0.1:3000/auth/";
@@ -15,7 +15,7 @@ class AuthService {
     })
     .then(response => {
       if (response.data.access_token) {
-	      Cookies.set('user', JSON.stringify(response.data))
+	      Cookies.set('user', response.data.access_token)
       }
       return response.data;
     })
@@ -35,11 +35,10 @@ class AuthService {
   }
 
   getCurrentUser(user) {
-  	const token = user.access_token;
-  	return axios({
+	  return axios({
 		  url: API_URL + "user",
 		  method: 'POST',
-		  headers: {'Authorization': `Bearer ${token}`}
+		  headers: {'Authorization': `Bearer ${user}`}
 	  });
   }
 }

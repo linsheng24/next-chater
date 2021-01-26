@@ -3,8 +3,7 @@ import Cookies from 'js-cookie';
 
 export default async () => {
 	if (Cookies.get('user')) {
-		const user_cookie = Cookies.get('user');
-		const user = JSON.parse(user_cookie);
+		const user = Cookies.get('user');
 
 		try {
 			const { data } = await AuthService.getCurrentUser(user);
