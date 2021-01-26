@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 const API_URL = "http://127.0.0.1:3000/auth/";
 
 class AuthService {
-  login(email, password) {
+  async login(email, password) {
     return axios({
 	    method: 'post',
       url: API_URL + 'login',

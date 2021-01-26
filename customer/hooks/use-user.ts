@@ -1,22 +1,16 @@
 import useSWR from 'swr';
 import userFetcher from '../apis/api-user';
+import Cookies from 'js-cookie';
 
 export default function useUser() {
-	const {data, mutate, error} = useSWR('user', userFetcher);
-	console.log(data, error);
-	const loading = !data && !error;
-	// console.log(2,error, error.response)
-	const loggedOut = error && error.response.status === 401;
-	console.log({
-		loading,
-		loggedOut,
-		user: data,
-		mutate
-	})
+	const {data, mutate, error} = useSWR('auth/user', userFetcher);
+	const loggedOut = !data && !error;
+	const loading = data === 'login' || (!data && Cookies.get('user'));
 	return {
-		loading,
-		loggedOut,
 		user: data,
+		loggedOut,
+		loading,
+		error,
 		mutate
 	}
 }

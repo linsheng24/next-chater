@@ -34,16 +34,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 function LoginPage() {
 	const classes:Record<any, any> = useStyles();
   const { register, handleSubmit, watch, errors } = useForm();
-  const {
-    loading,
-    loggedOut,
-    user: data,
-    mutate
-  } = useUser();
+  const { mutate } = useUser();
   const onSubmit = data => {
     AuthService.login(data.email, data.password)
       .then((response) => {
-        mutate();
+        mutate('login');
       });
   }
 
@@ -113,7 +108,6 @@ function LoginPage() {
 									Don't have an account? Sign Up
 								</Link>
 							</Grid>
-              <a onClick={() => onForgot()} >logout</a>
 						</Grid>
 					</form>
 				</div>
