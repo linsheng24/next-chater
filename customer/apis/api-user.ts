@@ -10,6 +10,7 @@ export default async () => {
 			return data;
 		} catch (e) {
 			const error = new Error("Not authorized!");
+			Cookies.remove('user');
 			error.status = 403;
 			throw error;
 		}
