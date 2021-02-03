@@ -98,7 +98,7 @@ export default function AppHeader() {
           </Grid>
           <Grid item container xs={3} md={2} justify='center' alignItems='center'>
             <a href='javascript:void(0)' aria-controls='profile-menu' aria-haspopup='true' onClick={handleClick}>
-              <Avatar src={'/image/' + mainPhoto} className={classes.avatar} />
+              <Avatar src={'/images/' + mainPhoto} className={classes.avatar} />
             </a>
             <Menu
               id='profile-menu'
