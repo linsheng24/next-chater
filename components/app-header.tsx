@@ -25,8 +25,11 @@ const useStyles = makeStyles((theme) => ({
 export default function AppHeader() {
   const classes = useStyles();
   const { user, mutate } = useUser();
+  let mainPhoto = null;
+  if(user.photos.length !== 0) {
+    mainPhoto = user.photos[0].url;
+  }
   const [tabIndex, setTabIndex] = useState(0);
-
   const menuData = [
     {
       text: '使用條款',
@@ -95,7 +98,7 @@ export default function AppHeader() {
           </Grid>
           <Grid item container xs={3} md={2} justify='center' alignItems='center'>
             <a href='javascript:void(0)' aria-controls='profile-menu' aria-haspopup='true' onClick={handleClick}>
-              <Avatar src={'/static/images/' + user.photo_url} className={classes.avatar} />
+              <Avatar src={'/image/' + mainPhoto} className={classes.avatar} />
             </a>
             <Menu
               id='profile-menu'
