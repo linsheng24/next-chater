@@ -3,6 +3,7 @@ import { AppBar, Avatar, Grid, Menu, MenuItem, Tab, Tabs, Toolbar } from '@mater
 import { makeStyles } from '@material-ui/core/styles';
 import useUser from '../customer/hooks/use-user';
 import AuthService from '../customer/services/auth-service';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -10,12 +11,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   tab: {
-    height: theme.spacing(9),
+    height: theme.spacing(7),
     fontSize: theme.spacing(2.5)
   },
   avatar: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
+    width: theme.spacing(5.5),
+    height: theme.spacing(5.5),
   },
   menu: {
     position: 'relative',
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 export default function AppHeader() {
   const classes = useStyles();
   const { user, mutate } = useUser();
+  const router = useRouter();
   let mainPhoto = null;
   if(user.photos.length !== 0) {
     mainPhoto = user.photos[0].url;
@@ -60,12 +62,31 @@ export default function AppHeader() {
       action: null
     }
   ];
+
+  const tabClickHandler = (item, index) => {
+    setTabIndex(index);
+    if (item.route !== null) {
+      router.push(item.route);
+    }
+  };
+
+  const menuClickHandler = (item) => {
+    if (item.route !== null) {
+      router.push(item.route);
+    }
+    if (item.action === 'logout') {
+      router.push('/');
+      AuthService.logout();
+      mutate();
+    }
+  };
+
   const tabs = tabData.map((item, index) => (
     <Tab
       label={item.text}
-      onClick={() => setTabIndex(index)}
+      onClick={() => tabClickHandler(item, index)}
       className={classes.tab}
-    />)
+    />),
   );
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -78,14 +99,9 @@ export default function AppHeader() {
     setAnchorEl(null);
   };
 
-  const loginOutHandler = () => {
-    AuthService.logout();
-    mutate();
-  }
-
   const menuItems = menuData.map((item, index) => (
-      <MenuItem onClick={loginOutHandler}>{item.text}</MenuItem>
-    )
+      <MenuItem onClick={() => menuClickHandler(item)}>{item.text}</MenuItem>
+    ),
   );
   return (
     <div className={classes.root}>
