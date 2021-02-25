@@ -1,5 +1,5 @@
 
-export default function Home() {
+export default function Chat() {
   return (
     <div>
       chat

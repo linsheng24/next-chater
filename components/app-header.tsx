@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Avatar, Grid, Menu, MenuItem, Tab, Tabs, Toolbar } from '@material-ui/core';
+import { AppBar, Avatar, Grid, Menu, MenuItem, Tab, Tabs } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import useUser from '../customer/hooks/use-user';
 import AuthService from '../customer/services/auth-service';
@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   tab: {
-    height: theme.spacing(7),
+    height: '6vh',
     fontSize: theme.spacing(2.5)
   },
   avatar: {
