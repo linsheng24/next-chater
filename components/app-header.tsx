@@ -7,12 +7,13 @@ import { useRouter } from 'next/router';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    height: '6vh',
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
   tab: {
+    fontSize: theme.spacing(2.5),
     height: '6vh',
-    fontSize: theme.spacing(2.5)
   },
   avatar: {
     width: theme.spacing(5.5),
@@ -20,7 +21,10 @@ const useStyles = makeStyles((theme) => ({
   },
   menu: {
     position: 'relative',
-  }
+  },
+  app_bar: {
+    position: 'fixed',
+  },
 }));
 
 export default function AppHeader() {
@@ -105,7 +109,7 @@ export default function AppHeader() {
   );
   return (
     <div className={classes.root}>
-      <AppBar position='static'>
+      <AppBar className={classes.app_bar}>
         <Grid container justify='space-between'>
           <Grid item container xs={9} md={10}>
             <Tabs value={tabIndex}>

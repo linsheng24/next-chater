@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Avatar, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import MatcherService from'../customer/services/matcher-service';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
   list: {
     paddingTop: 0,
+    paddingBottom: 0,
     width: '100%',
     borderRight: '2px solid rgb(244, 244, 244)',
     background: 'white'
@@ -24,37 +26,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function ChaterList() {
+function ChatterList() {
   const [matchers, setMatchers] = useState([]);
   const classes = useStyles();
 
   useEffect(()=>{
-    setMatchers([
-      {
-        id: 1,
-        name: '轟天旅人',
-        avatar: '/static/images/avatar/1.jpg',
-        lastMsg: '安安妳好…',
-        active: false,
-        locked: true
-      },
-      {
-        id: 2,
-        name: '轟天旅人',
-        avatar: '/static/images/avatar/1.jpg',
-        lastMsg: '安安妳好…',
-        active: false,
-        locked: true
-      },
-      {
-        id: 3,
-        name: '轟天旅人',
-        avatar: '/static/images/avatar/1.jpg',
-        lastMsg: '安安妳好…',
-        active: false,
-        locked: true
-      },
-    ]);
+    MatcherService.getMatchers().then((data) => {
+      setMatchers(data);
+    });
   }, []);
 
   const clickMatcherHandler = id => {
@@ -67,7 +46,7 @@ function ChaterList() {
     });
     setMatchers(newMatchers);
   };
-  console.log(matchers);
+
   const listItems = matchers.map((matcher) => (
     <>
       <ListItem button selected={matcher.active} alignItems='flex-start'  className={classes.listItem} onClick={()=>clickMatcherHandler(matcher.id)}>
@@ -109,7 +88,7 @@ export default function AppContent({ children }) {
   return <>
     <Grid container className={classes.root}>
       <Grid container item xs={3}>
-        <ChaterList/>
+        <ChatterList/>
       </Grid>
       <Grid container item xs={9}>
         {children}
