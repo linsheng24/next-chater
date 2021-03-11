@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(5.5),
     height: theme.spacing(5.5),
+    cursor: 'pointer'
   },
   menu: {
     position: 'relative',
@@ -87,6 +88,7 @@ export default function AppHeader() {
 
   const tabs = tabData.map((item, index) => (
     <Tab
+      key={index}
       label={item.text}
       onClick={() => tabClickHandler(item, index)}
       className={classes.tab}
@@ -104,7 +106,7 @@ export default function AppHeader() {
   };
 
   const menuItems = menuData.map((item, index) => (
-      <MenuItem onClick={() => menuClickHandler(item)}>{item.text}</MenuItem>
+      <MenuItem key={index} onClick={() => menuClickHandler(item)}>{item.text}</MenuItem>
     ),
   );
   return (
@@ -117,7 +119,7 @@ export default function AppHeader() {
             </Tabs>
           </Grid>
           <Grid item container xs={3} md={2} justify='center' alignItems='center'>
-            <a href='javascript:void(0)' aria-controls='profile-menu' aria-haspopup='true' onClick={handleClick}>
+            <a aria-controls='profile-menu' aria-haspopup='true' onClick={handleClick}>
               <Avatar src={'/images/' + mainPhoto} className={classes.avatar} />
             </a>
             <Menu

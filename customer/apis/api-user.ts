@@ -1,7 +1,7 @@
 import AuthService from '../services/auth-service';
 import Cookies from 'js-cookie';
 
-export default async () => {
+const ApiUser = async () => {
 	if (Cookies.get('user')) {
 		const user = Cookies.get('user');
 
@@ -11,10 +11,11 @@ export default async () => {
 		} catch (e) {
 			const error = new Error("Not authorized!");
 			Cookies.remove('user');
-			error.status = 403;
 			throw error;
 		}
 	} else {
 		return null;
 	}
 }
+
+export default ApiUser;

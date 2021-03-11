@@ -48,7 +48,7 @@ function ChatterList() {
   };
 
   const listItems = matchers.map((matcher) => (
-    <>
+    <React.Fragment key={matcher.id}>
       <ListItem button selected={matcher.active} alignItems='flex-start'  className={classes.listItem} onClick={()=>clickMatcherHandler(matcher.id)}>
         <ListItemAvatar>
           <Avatar alt='Remy Sharp' src={matcher.avatar} />
@@ -70,7 +70,7 @@ function ChatterList() {
         />
       </ListItem>
       <Divider component='li' />
-    </>
+    </React.Fragment>
   ));
   return (
     <List className={classes.list}>
@@ -82,7 +82,6 @@ function ChatterList() {
 }
 
 export default function AppContent({ children }) {
-  console.log(children);
   const classes = useStyles();
 
   return <>
