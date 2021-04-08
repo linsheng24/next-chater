@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { Avatar, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
+import {
+  Avatar,
+  Divider,
+  Grid,
+  Hidden,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MatcherService from'../customer/services/matcher-service';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '94vh'
+    height: '94vh',
   },
   inline: {
     display: 'inline',
@@ -86,11 +96,15 @@ export default function AppContent({ children }) {
 
   return <>
     <Grid container className={classes.root}>
-      <Grid container item xs={3}>
-        <ChatterList/>
-      </Grid>
-      <Grid container item xs={9}>
-        {children}
+      <Hidden xsDown>
+        <Grid container item sm={3}>
+          <ChatterList/>
+        </Grid>
+      </Hidden>
+      <Grid container item xs={12} sm={9}>
+        <Scrollbars>
+          {children}
+        </Scrollbars>
       </Grid>
     </Grid>
   </>;
