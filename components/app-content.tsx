@@ -16,7 +16,7 @@ import MatcherService from'../customer/services/matcher-service';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '94vh'
+    height: '94vh',
   },
   inline: {
     display: 'inline',
@@ -102,7 +102,9 @@ export default function AppContent({ children }) {
         </Grid>
       </Hidden>
       <Grid container item xs={12} sm={9}>
-        {children}
+        <Scrollbars>
+          {children}
+        </Scrollbars>
       </Grid>
     </Grid>
   </>;
