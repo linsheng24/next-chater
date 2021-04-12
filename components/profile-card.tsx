@@ -14,6 +14,7 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import useUser from '../customer/hooks/use-user';
 import { useState } from 'react';
+import { DoneOutline } from '@material-ui/icons';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -43,8 +44,14 @@ function CardItem({ payload }) {
       cursor: 'pointer'
     }
   }));
-
+  const [editable, setEditable] = useState(true);
   const [selectedDate, handleDateChange] = useState(new Date());
+  const editHandler = () => {
+    if (editable) {
+
+    }
+    setEditable(!editable);
+  }
 
   const classes = useStyles();
   const { text, type, require, data } = payload;
@@ -54,7 +61,7 @@ function CardItem({ payload }) {
       showBlock = <TextField
         className={classes.item_input}
         defaultValue={data}
-        disabled={true}
+        disabled={editable}
         InputProps={{
           readOnly: true,
         }}
@@ -63,7 +70,7 @@ function CardItem({ payload }) {
     case 'number':
       showBlock = <TextField
         className={classes.item_input}
-        disabled={true}
+        disabled={editable}
         defaultValue={data}
         InputProps={{
           readOnly: true,
@@ -74,7 +81,7 @@ function CardItem({ payload }) {
       showBlock = <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <DatePicker
           disableFuture
-          disabled={true}
+          disabled={editable}
           openTo='year'
           format='yyyy-MM-dd'
           views={['year', 'month', 'date']}
@@ -86,7 +93,7 @@ function CardItem({ payload }) {
     case 'array':
       showBlock = <TextField
         className={classes.item_input}
-        disabled={true}
+        disabled={editable}
         defaultValue={data}
         InputProps={{
           readOnly: true,
@@ -96,7 +103,7 @@ function CardItem({ payload }) {
     case 'text_area':
       showBlock = <TextField
         className={classes.item_input}
-        disabled={true}
+        disabled={editable}
         multiline
         rows={6}
         defaultValue={data}
@@ -114,7 +121,14 @@ function CardItem({ payload }) {
     <ListItem>
       <Grid container direction='row' justify='center'>
         <Grid container item xs={3} md={4} justify='center' alignItems='center'>
-          <Typography variant="h6">{text}</Typography><EditOutlinedIcon className={classes.editIcon} fontSize="small" />
+          <Typography variant="h6">{text}</Typography>
+          <span onClick={editHandler}>
+            {
+              editable ?
+                (<EditOutlinedIcon className={classes.editIcon} fontSize="small" />) :
+                (<DoneOutline className={classes.editIcon} fontSize="small" />)
+            }
+          </span>
         </Grid>
         <Grid container item xs={9} md={8} justify='center'>
           {showBlock}
@@ -130,51 +144,54 @@ function ProfileCard() {
   const { user, loading, error } = useUser();
   const photos = user.photos.filter(photo => photo.isMain);
   const mainImg = photos.length === 0 ? null : photos[0].url;
-  const columns = [
-    {
-      text: '姓名',
-      type: 'text',
-      required: true,
-      data: '林勝鋒',
-    },
-    {
-      text: '性別',
-      type: 'number',
-      required: true,
-      data: 1,
-    },
-    {
-      text: '生日',
-      type: 'date',
-      required: true,
-      data: '1993-03-31',
-    },
-    {
-      text: '身高',
-      type: 'number',
-      required: false,
-      data: 175,
-    },
-    {
-      text: '體重',
-      type: 'number',
-      required: false,
-      data: 75,
-    },
-    {
-      text: '興趣',
-      type: 'array',
-      required: true,
-      data: [1, 2, 3, 4],
-    },
-    {
-      text: '自我介紹',
-      type: 'text_area',
-      required: false,
-      data: '你好，我叫林勝鋒',
-    },
-  ];
-  const cardItem = columns.map(column => <CardItem payload={column}/>)
+  const profileData = user.profileData;
+  console.log(profileData);
+
+  // const columns = [
+  //   {
+  //     text: '姓名',
+  //     type: 'text',
+  //     required: true,
+  //     data: '林勝鋒',
+  //   },
+  //   {
+  //     text: '性別',
+  //     type: 'number',
+  //     required: true,
+  //     data: 1,
+  //   },
+  //   {
+  //     text: '生日',
+  //     type: 'date',
+  //     required: true,
+  //     data: '1993-03-31',
+  //   },
+  //   {
+  //     text: '身高',
+  //     type: 'number',
+  //     required: false,
+  //     data: 175,
+  //   },
+  //   {
+  //     text: '體重',
+  //     type: 'number',
+  //     required: false,
+  //     data: 75,
+  //   },
+  //   {
+  //     text: '興趣',
+  //     type: 'tags',
+  //     required: true,
+  //     data: [1, 2, 3, 4],
+  //   },
+  //   {
+  //     text: '自我介紹',
+  //     type: 'text_area',
+  //     required: false,
+  //     data: '你好，我叫林勝鋒',
+  //   },
+  // ];
+  const cardItem = profileData.map(column => <CardItem payload={column}/>)
 
   return (
     <Card className={classes.root}>
