@@ -15,6 +15,8 @@ import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import useUser from '../customer/hooks/use-user';
 import { useState } from 'react';
 import { DoneOutline } from '@material-ui/icons';
+import ProfileService from '../customer/services/profile-service'
+import AuthService from '../customer/services/auth-service';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -44,44 +46,56 @@ function CardItem({ payload }) {
       cursor: 'pointer'
     }
   }));
-  const [editable, setEditable] = useState(true);
+  const [editing, setEditing] = useState(false);
   const [selectedDate, handleDateChange] = useState(new Date());
-  const editHandler = () => {
-    if (editable) {
-
-    }
-    setEditable(!editable);
-  }
 
   const classes = useStyles();
-  const { text, type, require, data } = payload;
+  const { name, text, type, data, editable, require } = payload;
+  const [ value, setValue ] = useState(data);
+  const { mutate } = useUser();
+  console.log(payload);
+
+  const editHandler = async () => {
+    if (editing) {
+      const newUser = await ProfileService.editProfile(name, value);
+      if (newUser.hasOwnProperty('access_token')) {
+        AuthService.refreshToken(newUser.access_token);
+        await mutate();
+      } else {
+        alert('更新失敗');
+      }
+    }
+    setEditing(!editing);
+  }
+
+  const inputChangedHandler = (e) => {
+    console.log(1)
+    setValue(e.target.value);
+  }
+
   let showBlock;
   switch (type) {
     case 'text':
       showBlock = <TextField
         className={classes.item_input}
-        defaultValue={data}
-        disabled={editable}
-        InputProps={{
-          readOnly: true,
-        }}
+        defaultValue={value}
+        onChange={inputChangedHandler}
+        disabled={!editing}
       />;
       break;
     case 'number':
       showBlock = <TextField
         className={classes.item_input}
-        disabled={editable}
-        defaultValue={data}
-        InputProps={{
-          readOnly: true,
-        }}
+        onChange={inputChangedHandler}
+        disabled={!editing}
+        defaultValue={value}
       />;
       break;
     case 'date':
       showBlock = <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <DatePicker
           disableFuture
-          disabled={editable}
+          disabled={!editing}
           openTo='year'
           format='yyyy-MM-dd'
           views={['year', 'month', 'date']}
@@ -93,24 +107,19 @@ function CardItem({ payload }) {
     case 'array':
       showBlock = <TextField
         className={classes.item_input}
-        disabled={editable}
-        defaultValue={data}
-        InputProps={{
-          readOnly: true,
-        }}
+        disabled={!editing}
+        defaultValue={value}
       />;
       break;
     case 'text_area':
       showBlock = <TextField
         className={classes.item_input}
-        disabled={editable}
+        onChange={inputChangedHandler}
+        disabled={!editing}
         multiline
         rows={6}
-        defaultValue={data}
+        defaultValue={value}
         variant="outlined"
-        InputProps={{
-          readOnly: true,
-        }}
       />;
       break;
     default:
@@ -122,13 +131,17 @@ function CardItem({ payload }) {
       <Grid container direction='row' justify='center'>
         <Grid container item xs={3} md={4} justify='center' alignItems='center'>
           <Typography variant="h6">{text}</Typography>
-          <span onClick={editHandler}>
-            {
-              editable ?
-                (<EditOutlinedIcon className={classes.editIcon} fontSize="small" />) :
-                (<DoneOutline className={classes.editIcon} fontSize="small" />)
-            }
-          </span>
+          {
+            editable ? (
+              <span onClick={editHandler}>
+                {
+                  !editing ?
+                    (<EditOutlinedIcon className={classes.editIcon} fontSize="small" />) :
+                    (<DoneOutline className={classes.editIcon} fontSize="small" />)
+                }
+              </span>) : <span />
+          }
+
         </Grid>
         <Grid container item xs={9} md={8} justify='center'>
           {showBlock}

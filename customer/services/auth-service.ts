@@ -1,13 +1,13 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URL = "http://127.0.0.1:3000/auth/";
+const API_URL = "http://127.0.0.1:3000/";
 
 class AuthService {
   async login(email, password) {
     return axios({
 	    method: 'post',
-      url: API_URL + 'login',
+      url: API_URL + 'auth/login',
       data: {
         username: email,
         password: password
@@ -36,10 +36,15 @@ class AuthService {
 
   getCurrentUser(user) {
 	  return axios({
-		  url: API_URL + "user",
-		  method: 'POST',
+		  // url: API_URL + "user",
+		  url: API_URL + 'user/getProfile',
+		  method: 'GET',
 		  headers: {'Authorization': `Bearer ${user}`}
 	  });
+  }
+
+  refreshToken(token) {
+	  Cookies.set('user', token);
   }
 }
 
