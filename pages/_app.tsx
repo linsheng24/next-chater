@@ -3,6 +3,7 @@ import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import useUser from '../customer/hooks/use-user';
 import Layout from '../components/layout';
 import LoadingModal from '../components/loading-modal';
+import { RecoilRoot } from 'recoil';
 
 const theme = createMuiTheme({
   palette: {
@@ -17,15 +18,17 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <CssBaseline>
-      <ThemeProvider theme={theme}>
-        { isLogin ?
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-          : <LoginPage />
-        }
-      </ThemeProvider>
-      <LoadingModal open={loading}/>
+      <RecoilRoot>
+        <ThemeProvider theme={theme}>
+          {isLogin ?
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+            : <LoginPage />
+          }
+        </ThemeProvider>
+        <LoadingModal open={loading} />
+      </RecoilRoot>
     </CssBaseline>
   );
 }
