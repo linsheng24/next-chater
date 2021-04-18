@@ -55,9 +55,69 @@ const useStyles = makeStyles(() => ({
     marginBottom: 10,
   },
   clipItem: {
-    margin: 4,
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15,
   }
 }));
+
+function TagSelectModel({ open, onCancel, onSubmit, options, selectedOptions }) {
+  const classes = useStyles();
+
+  const [modelOptions, setOptions] = useState(selectedOptions);
+  const cancelHandler = () => {
+    setOptions(selectedOptions);
+    onCancel();
+  };
+  const chipOptions = options.map(item => {
+    const selected = modelOptions.includes(item.id);
+    const toggleSelect = (id) => {
+      if (modelOptions.includes(item.id)) {
+        const newOptions = modelOptions.filter(item => item !== id);
+        setOptions(newOptions);
+      } else {
+        setOptions([...modelOptions, item.id]);
+      }
+    }
+    return selected ? <Chip
+        key={item.id}
+        className={classes.clipItem}
+        color='primary'
+        label={item.text}
+        clickable
+        onDelete={()=>toggleSelect(item.id)}
+      /> :
+      <Chip
+        key={item.id}
+        className={classes.clipItem}
+        label={item.text}
+        clickable
+        deleteIcon={<DoneIcon />}
+        onDelete={()=>toggleSelect(item.id)}
+      />;
+  });
+
+  return <Modal
+    className={classes.modal}
+    open={open}
+    disableBackdropClick
+    BackdropComponent={Backdrop}
+  >
+    <Fade in={open}>
+      <Grid container justify='center' className={classes.paper}>
+        <Grid container justify='center' className={classes.tagContainer}>
+          <Scrollbars>
+            <Grid container justify='center'>
+              {chipOptions}
+            </Grid>
+          </Scrollbars>
+        </Grid>
+        <Button className={classes.button} onClick={cancelHandler} variant='contained'>取消</Button>
+        <Button className={classes.button} onClick={() => onSubmit(modelOptions)} variant='contained' color='primary'>修改</Button>
+      </Grid>
+    </Fade>
+  </Modal>;
+}
 
 export function CardItem({ payload }) {
 	const classes = useStyles();
@@ -68,38 +128,32 @@ export function CardItem({ payload }) {
 	const [value, setValue] = useState(data);
 	const { mutate } = useUser();
   const interestMap = useRecoilValue(InterestMap);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
-  const handleOpen = () => {
+  async function submitData(name: any, value: any) {
+    const data = Array.isArray(value) ? value.join(',') : value;
+    const newUser = await ProfileService.editProfile(name, data);
+    if (newUser.hasOwnProperty('access_token')) {
+      AuthService.refreshToken(newUser.access_token);
+      await mutate();
+    } else {
+      alert('更新失敗');
+    }
+  }
+
+  const editHandler = async () => {
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-	const editHandler = async () => {
 		if (editing) {
-			const newUser = await ProfileService.editProfile(name, value);
-			if (newUser.hasOwnProperty('access_token')) {
-				AuthService.refreshToken(newUser.access_token);
-				await mutate();
-			} else {
-				alert('更新失敗');
-			}
-		}
-		setEditing(!editing);
-	};
+      await submitData(name, value);
+    }
+    setEditing(!editing);
+  };
 
 	const inputChangedHandler = (e) => {
 		setValue(e.target.value);
 	};
 
 	let showBlock;
-
-  const handleDelete = () => {
-
-  };
 
   switch (type) {
 		case 'text':
@@ -132,55 +186,36 @@ export function CardItem({ payload }) {
 			</MuiPickersUtilsProvider>;
 			break;
 		case 'tags':
+
+      const handleChipCancel = () => {
+        setOpen(false);
+      };
+
+      const handleChipSubmit = async (value) => {
+        await submitData(name, value);
+        setOpen(false);
+        setEditing(false);
+      };
+
 		  const interestIds = data.split(',').map(item => Number(item));
       const chipItem = interestMap
         .filter(item => interestIds.includes(item.id))
-        .map(item => ({ label: item.text }))
+        .map(item => ({ id: item.id, label: item.text }))
         .map(item => <Chip
+          key={item.id}
           label={item.label}
           className={classes.chipItem}
           deleteIcon={<DoneIcon />}
         />);
-      const chipOptions = interestMap.map(item => {
-        const selected = interestIds.includes(item.id);
-        return selected ? <Chip
-            className={classes.clipItem}
-            color='primary'
-            label={item.text}
-            clickable
-            onDelete={handleDelete}
-            deleteIcon={<DoneIcon />}
-          /> :
-          <Chip
-            className={classes.clipItem}
-            label={item.text}
-            clickable
-            onDelete={handleDelete}
-          />;
-      })
 
       showBlock = (<Grid container justify='center'>
-        <Modal
-          className={classes.modal}
+        <TagSelectModel
           open={open}
-          onClose={handleClose}
-          disableBackdropClick
-          BackdropComponent={Backdrop}
-        >
-          <Fade in={open}>
-            <Grid container justify='center' className={classes.paper}>
-              <Grid container justify='center' className={classes.tagContainer}>
-                <Scrollbars>
-                  <Grid container justify='center'>
-                    {chipOptions}
-                  </Grid>
-                </Scrollbars>
-              </Grid>
-              <Button className={classes.button} variant='contained'>取消</Button>
-              <Button className={classes.button} variant='contained' color='primary'>修改</Button>
-            </Grid>
-          </Fade>
-        </Modal>
+          options={interestMap}
+          selectedOptions={interestIds}
+          onCancel={handleChipCancel}
+          onSubmit={handleChipSubmit}
+        />
         <Grid item container xs={8}>
           {chipItem}
         </Grid>

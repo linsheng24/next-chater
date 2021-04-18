@@ -28,8 +28,7 @@ function ProfileCard() {
   const photos = user.photos.filter(photo => photo.isMain);
   const mainImg = photos.length === 0 ? null : photos[0].url;
   const profileData = user.profileData;
-
-  const cardItem = profileData.map(column => <CardItem payload={column}/>)
+  const cardItem = profileData.map(column => <CardItem key={column.name} payload={column}/>)
   return (
     <Card className={classes.root}>
       <Grid container justify='center'>
