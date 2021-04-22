@@ -20,13 +20,19 @@ export default function MyApp({ Component, pageProps }) {
 
 
   useEffect(() => {
-    const socket = io('127.0.0.1:3000');
-    window['socket'] = socket;
-    socket.on('connect', function() {
-      console.log('connect success');
-      // socket.emit('events', { data: 'I\'m from browser.' });
-    }, []);
-  });
+    if (isLogin) {
+      const socket = io('127.0.0.1:3000/chat');
+      window['socket'] = socket;
+      socket.on('connect', function() {
+        console.log('connect success');
+        socket.emit('join', 'test_room');
+      });
+
+      socket.on('test', function() {
+        console.log('test');
+      });
+    }
+  }, [user, loading]);
 
   return (
     <CssBaseline>
