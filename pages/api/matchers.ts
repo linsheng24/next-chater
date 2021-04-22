@@ -2,7 +2,7 @@ const matchers = [
 	{
 		id: 1,
 		name: '轟天旅人',
-		avatar: '/static/images/avatar/1.jpg',
+		avatar: '/images/144003672_227000429131184_7589601220940381298_n.jpg',
 		lastMsg: '安安妳好…',
 		active: false,
 		locked: true
@@ -10,7 +10,7 @@ const matchers = [
 	{
 		id: 2,
 		name: '轟天旅人',
-		avatar: '/static/images/avatar/1.jpg',
+		avatar: '/images/144003672_227000429131184_7589601220940381298_n.jpg',
 		lastMsg: '安安妳好…',
 		active: false,
 		locked: true
@@ -18,7 +18,7 @@ const matchers = [
 	{
 		id: 3,
 		name: '轟天旅人',
-		avatar: '/static/images/avatar/1.jpg',
+		avatar: '/images/144003672_227000429131184_7589601220940381298_n.jpg',
 		lastMsg: '安安妳好…',
 		active: false,
 		locked: true

@@ -239,21 +239,26 @@ export function CardItem({ payload }) {
 	return (
 		<ListItem>
 			<Grid container direction='row' justify='center'>
-				<Grid container item xs={3} md={4} justify='center' alignItems='center'>
+				<Grid container item xs={2} md={3} justify='center' alignItems='center'>
 					<Typography variant='h6'>{text}</Typography>
-					{
-						editable ? (
-							<span onClick={editHandler}>
+
+				</Grid>
+				<Grid container item xs={8} md={7} justify='center'>
+          <Grid container item xs={1} justify='center' alignItems='center'>
+            {
+              editable ? (
+                <span onClick={editHandler}>
                 {
-	                !editing ?
-		                (<EditOutlinedIcon className={classes.editIcon} fontSize='small' />) :
-		                (<DoneOutline className={classes.editIcon} fontSize='small' />)
+                  !editing ?
+                    (<EditOutlinedIcon className={classes.editIcon} fontSize='small' />) :
+                    (<DoneOutline className={classes.editIcon} fontSize='small' />)
                 }
               </span>) : <span />
-					}
-				</Grid>
-				<Grid container item xs={9} md={8} justify='center'>
-					{showBlock}
+            }
+          </Grid>
+          <Grid container item xs={11} justify='center' alignItems='center'>
+  					{showBlock}
+          </Grid>
 				</Grid>
 			</Grid>
 		</ListItem>
