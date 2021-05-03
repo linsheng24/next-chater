@@ -26,6 +26,17 @@ class ProfileService {
 		}
 
 	}
+
+	async getInterestMap() {
+		return axios({
+			method: 'get',
+			url: API_URL + "interest/mapping",
+		})
+			.then(response => {
+				return response.data;
+			})
+			.catch(error => console.log(error));
+	}
 }
 
 export default new ProfileService();

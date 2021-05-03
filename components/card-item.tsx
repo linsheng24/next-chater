@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/styles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useUser from '../customer/hooks/use-user';
 import ProfileService from '../customer/services/profile-service';
 import AuthService from '../customer/services/auth-service';
@@ -9,7 +9,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import { DoneOutline } from '@material-ui/icons';
 import DoneIcon from '@material-ui/icons/Done';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { InterestMap } from '../state/atoms';
 import { Scrollbars } from 'react-custom-scrollbars';
 
@@ -128,9 +128,21 @@ export function CardItem({ payload }) {
 	const [value, setValue] = useState(data);
 	const { mutate } = useUser();
   const interestMap = useRecoilValue(InterestMap);
+  const setInterestMap = useSetRecoilState(InterestMap);
   const [open, setOpen] = useState(false);
 
-  async function submitData(name: any, value: any) {
+  useEffect(() => {
+    if (type === 'tags' && interestMap.length === 0) {
+      InterestMapFetcher();
+    }
+  }, [interestMap]);
+
+  const InterestMapFetcher = async () => {
+    const data = await ProfileService.getInterestMap();
+    setInterestMap(data);
+  }
+
+  const submitData = async (name: any, value: any) => {
     const data = Array.isArray(value) ? value.join(',') : value;
     const newUser = await ProfileService.editProfile(name, data);
     if (newUser.hasOwnProperty('access_token')) {
@@ -139,7 +151,7 @@ export function CardItem({ payload }) {
     } else {
       alert('更新失敗');
     }
-  }
+  };
 
   const editHandler = async () => {
     setOpen(true);
@@ -189,6 +201,7 @@ export function CardItem({ payload }) {
 
       const handleChipCancel = () => {
         setOpen(false);
+        setEditing(false);
       };
 
       const handleChipSubmit = async (value) => {
