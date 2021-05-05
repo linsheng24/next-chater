@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/styles';
 import { AccountCircle } from '@material-ui/icons';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useEffect, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
+import { InterestMap, MessageList } from '../state/atoms';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -32,36 +34,91 @@ const useStyles = makeStyles(theme => ({
       justifySelf: 'end'
     },
     matcherName: {
-      margin: 0
+      margin: 0,
     },
-    messageContent: {
+    messageContentBox: {
       height: '84%',
     },
     messageInput: {
       height: '8%',
+      backgroundColor: '#97bc62ff',
     },
-    test: {
-      height: '30px',
-      margin: 0,
+    messageRight: {
+      alignItems: 'center',
+      minHeight: '70px',
+      flexDirection: 'row-reverse',
+      padding: '15px',
+      paddingLeft: '50px',
+      paddingBottom: '0',
+    },
+    messageLeft: {
+      alignItems: 'center',
+      minHeight: '70px',
+      padding: '15px',
+      paddingRight: '50px',
+      paddingBottom: '0',
     },
     container: {
       flexDirection: 'column-reverse',
-
     },
+    messageContentRight: {
+      display: 'flex',
+      alignItems: 'center',
+      backgroundColor: '#aadd77ff',
+      padding: '10px',
+      minHeight: '50px',
+      minWidth: '50px',
+      borderRadius: '20px 20px 0 15px',
+      wordBreak: 'break-all',
+      wordWrap: 'break-word',
+    },
+    messageContentLeft: {
+      display: 'flex',
+      alignItems: 'center',
+      backgroundColor: '#dbdbdb',
+      padding: '10px',
+      minHeight: '50px',
+      minWidth: '50px',
+      borderRadius: '15px 20px 20px 0',
+      wordBreak: 'break-all',
+      wordWrap: 'break-word',
+    },
+
   }),
 );
+
+function Message ({action, type, content}) {
+  const classes = useStyles();
+  let messageBody;
+  if (type === 'text') {
+    messageBody = (<Grid container className={action === 'receive' ? classes.messageLeft : classes.messageRight}>
+      <div className={action === 'receive' ? classes.messageContentLeft : classes.messageContentRight}>
+        <span>{content}</span>
+      </div>
+    </Grid>);
+  } else if (type === 'image') {
+    messageBody = 'image';
+  }
+  return <>
+    {messageBody}
+  </>;
+}
 
 export default function Chat() {
   const classes = useStyles();
   const scrollRef = useRef();
-
+  const messageList = useRecoilValue(MessageList);
+  const messageListContent = messageList.map(({timestamp, ...msgProps}) => {
+    return <Message key={timestamp} {...msgProps}/>
+  });
   useEffect(() => {
+    // @ts-ignore
     scrollRef.current.scrollToBottom();
   }, []);
 
   return (
     <Grid container justify='center' className={classes.root}>
-      <Grid item xs={12} sm={10} md={8}>
+      <Grid item xs={12} sm={10} md={7}>
         <Paper className={classes.chatFrame}>
           <AppBar position='static' className={classes.appBar}>
             <Toolbar>
@@ -73,49 +130,10 @@ export default function Chat() {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <Grid container className={classes.messageContent}>
-            <Scrollbars ref={scrollRef} className={classes.messageContent}>
-              <Grid container className={classes.container}>
-                <Grid xs={12} className={classes.test}>content1</Grid>
-                <Grid xs={12} className={classes.test}>content2</Grid>
-                <Grid xs={12} className={classes.test}>content3</Grid>
-                <Grid xs={12} className={classes.test}>content4</Grid>
-                <Grid xs={12} className={classes.test}>content5</Grid>
-                <Grid xs={12} className={classes.test}>content6</Grid>
-                <Grid xs={12} className={classes.test}>content7</Grid>
-                <Grid xs={12} className={classes.test}>content8</Grid>
-                <Grid xs={12} className={classes.test}>content9</Grid>
-                <Grid xs={12} className={classes.test}>content10</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
-                <Grid xs={12} className={classes.test}>content</Grid>
+          <Grid container className={classes.messageContentBox}>
+            <Scrollbars ref={scrollRef}>
+              <Grid className={classes.container}>
+                {messageListContent}
               </Grid>
             </Scrollbars>
           </Grid>
