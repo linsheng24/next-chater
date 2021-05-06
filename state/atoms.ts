@@ -31,6 +31,6 @@ export const MessageList = atom({
 			type: 'text',
 			action: 'receive',
 			content: '妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好妳好'
-		}
+		},
 	]
 });

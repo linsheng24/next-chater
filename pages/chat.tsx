@@ -1,10 +1,10 @@
-import { AppBar, Grid, IconButton, Paper, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Grid, IconButton, Paper, TextField, Toolbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { AccountCircle } from '@material-ui/icons';
+import { AccountCircle, Send } from '@material-ui/icons';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { useEffect, useRef } from 'react';
-import { useRecoilValue } from 'recoil';
-import { InterestMap, MessageList } from '../state/atoms';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { MessageList } from '../state/atoms';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -41,6 +41,8 @@ const useStyles = makeStyles(theme => ({
     },
     messageInput: {
       height: '8%',
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: '#97bc62ff',
     },
     messageRight: {
@@ -83,7 +85,15 @@ const useStyles = makeStyles(theme => ({
       wordBreak: 'break-all',
       wordWrap: 'break-word',
     },
-
+    textField: {
+      width: '80%',
+      backgroundColor: '#aadd77ff',
+    },
+    sendMessage: {
+      color: '#000000',
+      opacity: 0.5,
+      cursor: 'pointer',
+    }
   }),
 );
 
@@ -108,21 +118,36 @@ export default function Chat() {
   const classes = useStyles();
   const scrollRef = useRef();
   const messageList = useRecoilValue(MessageList);
+  const setMessageList = useSetRecoilState(MessageList);
   const messageListContent = messageList.map(({timestamp, ...msgProps}) => {
     return <Message key={timestamp} {...msgProps}/>
   });
+  const [inputValue, setInputValue] = useState('');
   useEffect(() => {
     // @ts-ignore
     scrollRef.current.scrollToBottom();
   }, []);
 
+  const sendHandler = () => {
+    setInputValue('');
+    setMessageList([
+      ...messageList,
+      {
+        timestamp: Date.now(),
+        type: 'text',
+        action: 'send',
+        content: inputValue
+      },
+    ]);
+  };
+
   return (
     <Grid container justify='center' className={classes.root}>
-      <Grid item xs={12} sm={10} md={7}>
+      <Grid item xs={12} sm={10} md={6}>
         <Paper className={classes.chatFrame}>
           <AppBar position='static' className={classes.appBar}>
             <Toolbar>
-              <Typography variant='h5' gutterBottom className={classes.matcherName}>
+              <Typography gutterBottom className={classes.matcherName}>
                 轟天旅人
               </Typography>
               <IconButton className={classes.setting}>
@@ -138,7 +163,23 @@ export default function Chat() {
             </Scrollbars>
           </Grid>
           <Grid container className={classes.messageInput}>
-            content
+            <Grid item container justify='center' xs={10}>
+              <TextField
+                multiline
+                size="small"
+                variant='outlined'
+                label='Type a message...'
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className={classes.textField}
+              />
+            </Grid>
+            <Grid item container justify='center' xs={2}>
+              <Send
+                className={classes.sendMessage}
+                onClick={sendHandler}
+              />
+            </Grid>
           </Grid>
         </Paper>
       </Grid>
