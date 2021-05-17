@@ -21,10 +21,10 @@ const useStyles = makeStyles(theme => ({
       },
     },
     chatFrame: {
-      height: '100%',
+      // height: '100%',
     },
     appBar: {
-      height: '8%',
+      height: '6vh',
       display: 'flex',
       alignItems: 'center',
       // @ts-ignore
@@ -37,10 +37,20 @@ const useStyles = makeStyles(theme => ({
       margin: 0,
     },
     messageContentBox: {
-      height: '84%',
+      [theme.breakpoints.up('xs')]: {
+        height: 'calc(100vh - 6vh - 6vh - 5vh)',
+        maxHeight: 'calc(100vh - 6vh - 6vh - 15vh - 80px)',
+      },
+      // @ts-ignore
+      [theme.breakpoints.down('xs')]: {
+        height: 'calc(100vh - 6vh - 6vh)',
+        maxHeight: 'calc(100vh - 6vh - 6vh - 80px)',
+      },
     },
     messageInput: {
-      height: '8%',
+      minHeight: '80px',
+      bottom: 0,
+      paddingRight: '20px',
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: '#97bc62ff',
@@ -93,6 +103,9 @@ const useStyles = makeStyles(theme => ({
       color: '#000000',
       opacity: 0.5,
       cursor: 'pointer',
+    },
+    bottomRow: {
+      display: 'absolute',
     }
   }),
 );
@@ -162,25 +175,27 @@ export default function Chat() {
               </Grid>
             </Scrollbars>
           </Grid>
-          <Grid container className={classes.messageInput}>
-            <Grid item container justify='center' xs={10}>
-              <TextField
-                multiline
-                size="small"
-                variant='outlined'
-                label='Type a message...'
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                className={classes.textField}
-              />
+          <div className={classes.bottomRow}>
+            <Grid container className={classes.messageInput}>
+              <Grid item container justify='center' xs={10}>
+                <TextField
+                  multiline
+                  size="small"
+                  variant='outlined'
+                  label='Type a message...'
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  className={classes.textField}
+                />
+              </Grid>
+              <Grid item container justify='center' xs={2}>
+                <Send
+                  className={classes.sendMessage}
+                  onClick={sendHandler}
+                />
+              </Grid>
             </Grid>
-            <Grid item container justify='center' xs={2}>
-              <Send
-                className={classes.sendMessage}
-                onClick={sendHandler}
-              />
-            </Grid>
-          </Grid>
+          </div>
         </Paper>
       </Grid>
     </Grid>
