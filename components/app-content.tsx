@@ -13,6 +13,8 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MatcherService from'../customer/services/matcher-service';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { Matchers, MatcherId } from '../state/atoms';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,8 +39,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ChatterList() {
-  const [matchers, setMatchers] = useState([]);
   const classes = useStyles();
+  const matchers = useRecoilValue(Matchers);
+  const setMatchers = useSetRecoilState(Matchers);
+  const matcherId = useRecoilValue(MatcherId);
+  const setMatcherId = useSetRecoilState(MatcherId);
 
   useEffect(()=>{
     MatcherService.getMatchers().then((data) => {
@@ -46,20 +51,9 @@ function ChatterList() {
     });
   }, []);
 
-  const clickMatcherHandler = id => {
-    const newMatchers = matchers.map((matcher) => {
-      if (matcher.id === id) {
-        return {...matcher, active: true};
-      } else {
-        return {...matcher, active: false};
-      }
-    });
-    setMatchers(newMatchers);
-  };
-
   const listItems = matchers.map((matcher) => (
     <React.Fragment key={matcher.id}>
-      <ListItem button selected={matcher.active} alignItems='flex-start'  className={classes.listItem} onClick={()=>clickMatcherHandler(matcher.id)}>
+      <ListItem button selected={matcher.id === matcherId} alignItems='flex-start'  className={classes.listItem} onClick={()=>setMatcherId(matcher.id)}>
         <ListItemAvatar>
           <Avatar alt='Remy Sharp' src={matcher.avatar} />
         </ListItemAvatar>

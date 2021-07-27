@@ -4,7 +4,6 @@ const matchers = [
 		name: '轟天旅人',
 		avatar: '/images/144003672_227000429131184_7589601220940381298_n.jpg',
 		lastMsg: '安安妳好…',
-		active: false,
 		locked: true
 	},
 	{
@@ -12,7 +11,6 @@ const matchers = [
 		name: '轟天旅人',
 		avatar: '/images/144003672_227000429131184_7589601220940381298_n.jpg',
 		lastMsg: '安安妳好…',
-		active: false,
 		locked: true
 	},
 	{
@@ -20,7 +18,6 @@ const matchers = [
 		name: '轟天旅人',
 		avatar: '/images/144003672_227000429131184_7589601220940381298_n.jpg',
 		lastMsg: '安安妳好…',
-		active: false,
 		locked: true
 	},
 ];

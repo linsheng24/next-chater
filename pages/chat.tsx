@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { MessageList } from '../state/atoms';
 
+// @ts-ignore
 const useStyles = makeStyles(theme => ({
     root: {
       height: '100%',
@@ -37,6 +38,7 @@ const useStyles = makeStyles(theme => ({
       margin: 0,
     },
     messageContentBox: {
+      // @ts-ignore
       [theme.breakpoints.up('xs')]: {
         height: 'calc(100vh - 6vh - 6vh - 5vh)',
         maxHeight: 'calc(100vh - 6vh - 6vh - 15vh - 80px)',

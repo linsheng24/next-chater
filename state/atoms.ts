@@ -5,6 +5,16 @@ export const InterestMap = atom({
 	default: []
 });
 
+export const Matchers = atom({
+	key: 'Matchers',
+	default: []
+});
+
+export const MatcherId = atom({
+	key: 'MatcherId',
+	default: null
+});
+
 export const MessageList = atom({
 	key: 'messageList',
 	default: [
