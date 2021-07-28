@@ -210,7 +210,7 @@ export function CardItem({ payload }) {
         setEditing(false);
       };
 
-		  const interestIds = data.split(',').map(item => Number(item));
+		  const interestIds = data === null ? [] : data.split(',').map(item => Number(item));
       const chipItem = interestMap
         .filter(item => interestIds.includes(item.id))
         .map(item => ({ id: item.id, label: item.text }))
