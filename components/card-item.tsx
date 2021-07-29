@@ -12,6 +12,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { InterestMap } from '../state/atoms';
 import { Scrollbars } from 'react-custom-scrollbars';
+import moment from 'moment';
 
 const useStyles = makeStyles(() => ({
   item_input: {
@@ -141,9 +142,14 @@ export function CardItem({ payload }) {
     const data = await ProfileService.getInterestMap();
     setInterestMap(data);
   }
-
   const submitData = async (name: any, value: any) => {
-    const data = Array.isArray(value) ? value.join(',') : value;
+    let data;
+    if (name === 'birth') {
+      data = moment(selectedDate).format('YYYY-MM-DD');
+      setValue(data);
+    } else {
+      data = Array.isArray(value) ? value.join(',') : value;
+    }
     const newUser = await ProfileService.editProfile(name, data);
     if (newUser.hasOwnProperty('access_token')) {
       AuthService.refreshToken(newUser.access_token);
@@ -189,6 +195,7 @@ export function CardItem({ payload }) {
 				<DatePicker
 					disableFuture
 					disabled={!editing}
+          type='date'
 					openTo='year'
 					format='yyyy-MM-dd'
 					views={['year', 'month', 'date']}
@@ -198,7 +205,6 @@ export function CardItem({ payload }) {
 			</MuiPickersUtilsProvider>;
 			break;
 		case 'tags':
-
       const handleChipCancel = () => {
         setOpen(false);
         setEditing(false);
